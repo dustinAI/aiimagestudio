@@ -5,11 +5,8 @@
 **AI Image Studio** is a web application designed to eliminate the visual content bottleneck in enterprise workflows. It empowers non-technical team members (marketing, sales, project management) to generate and edit professional-quality, on-brand images instantly, freeing up design teams for high-impact tasks.
 ## 🎥 Video Demo
 
-**[Link to Your 2-Minute YouTube/Vimeo/X Video Demo Here]**
+**[https://youtu.be/ioEX7AnRWzg)]**
 
-## 🚀 Live Application
-
-**[Link to Your Deployed Netlify/Render App Here]**
 
 ---
 ### The Business Problem: The Visual Content Bottleneck
