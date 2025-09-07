@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Iconos de https://boxicons.com/ -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ==================== PANEL IZQUIERDO (MENÚ) ==================== -->
+        <div class="left-panel">
+            <div class="logo">
+                <h2>AI Studio 🎨</h2>
+            </div>
+            <nav class="menu">
+                <p class="menu-header">GENERAR IMAGEN</p>
+                <button class="menu-button" data-agent="fotorrealista">
+                    <i class='bx bxs-camera'></i>
+                    <span>Escena Fotorrealista</span>
+                </button>
+                <button class="menu-button" data-agent="ilustracion">
+                    <i class='bx bxs-sticker'></i>
+                    <span>Ilustración / Calcomanía</span>
+                </button>
+                <button class="menu-button" data-agent="texto_en_imagen">
+                    <i class='bx bxs-text'></i>
+                    <span>Imagen con Texto</span>
+                </button>
+                <button class="menu-button" data-agent="simulacion_producto">
+                    <i class='bx bxs-store'></i>
+                    <span>Simulación de Producto</span>
+                </button>
+
+                <button class="menu-button" data-agent="diseño_minimalista">
+                    <i class='bx bxs-component'></i>
+                    <span>Diseño Minimalista</span>
+                </button>
+
+                <button class="menu-button" data-agent="arte_secuencial">
+                    <i class='bx bxs-comic'></i>
+                    <span>Arte Secuencial / Cómic</span>
+                </button>
+                <!-- Agrega los demás botones de generación aquí -->
+
+                <p class="menu-header">EDITAR IMAGEN</p>
+                <button class="menu-button" data-agent="añadir_quitar">
+                    <i class='bx bx-layer-plus'></i>
+                    <span>Añadir o Quitar</span>
+                </button>
+
+                <button class="menu-button" data-agent="transferencia_estilo">
+                    <i class='bx bxs-palette'></i>
+                    <span>Transferencia de Estilo</span>
+                </button>
+                <button class="menu-button" data-agent="composicion_avanzada">
+                    <i class='bx bxs-copy-alt'></i>
+                    <span>Composición Avanzada</span>
+                </button>
+                <button class="menu-button" data-agent="alta_fidelidad">
+                    <i class='bx bxs-shield-alt-2'></i>
+                    <span>Alta Fidelidad</span>
+                </button>
+                <button class="menu-button" data-agent="retocar_area"><i class='bx bxs-magic-wand-alt'></i><span>Retocar Área (Inpainting)</span></button>
+                
+                <!-- Agrega los demás botones de edición aquí -->
+            </nav>
+        </div>
+
+        <!-- ==================== PANEL CENTRAL (CANVAS) ==================== -->
+        <div class="main-panel">
+            <div id="canvas-area" class="canvas-area">
+                <div id="welcome-message" class="welcome-message">
+                    <h3>Bienvenido a AI Image Studio</h3>
+                    <p>Selecciona una herramienta del menú de la izquierda para comenzar.</p>
+                </div>
+                <div id="loader" class="loader" style="display: none;"></div>
+                <img id="result-image" src="" alt="La imagen generada aparecerá aquí">
+                <button id="save-btn" class="action-button save-button" style="display: none;">
+                    <i class='bx bxs-download'></i> Guardar Imagen
+                    </button>
+                </div>
+        </div>
+
+        <!-- ==================== PANEL DERECHO (AGENTE) ==================== -->
+        <div class="right-panel">
+            <div id="agent-panel" class="agent-panel">
+                <!-- El contenido de este panel se generará dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
