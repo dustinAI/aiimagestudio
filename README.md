@@ -38,13 +38,12 @@ The application uses a simple but powerful stack:
 
 **Backend:**
 1.  Navigate to the `/backend` directory.
-2.  Create a `.env` file and add your API key: `GEMINI_API_KEY="YOUR_API_KEY_HERE"`
-3.  Run `npm install` to install dependencies.
-4.  Run `npm start` to start the server with nodemon (auto-restarts on changes).
+2.  Edit the `.env` file and add your API key: `GEMINI_API_KEY="YOUR_API_KEY_HERE"`
+3.  in terminal: cd aiimagestudio/backend
+4.  Run `npm install` to install dependencies.
+5.  Run `npm start` to start the server 
+6.  now go to your explorer : http://localhost:3000
 
-**Frontend:**
-1.  Navigate to the `/frontend` directory.
-2.  Open the `index.html` file in your web browser. The application is ready to use.
 
 ---
 
