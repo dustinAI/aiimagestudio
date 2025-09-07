@@ -242,13 +242,47 @@ document.addEventListener('DOMContentLoaded', () => {
     renderComicUI();
 },
         'añadir_quitar': () => {
-            agentPanel.innerHTML = `<h3><i class='bx bx-layer-plus'></i> Añadir o Quitar Elementos</h3><p>1. Sube una imagen para empezar.</p><div class="form-group"><input type="file" id="image-upload" accept="image/*" style="display: none;"><label for="image-upload" class="action-button upload-button">Seleccionar Imagen</label></div><p>2. Describe el cambio que quieres hacer.</p><div class="form-group"><label for="edit-prompt">Instrucción de Edición</label><textarea id="edit-prompt" placeholder="Ej: añade un gato negro en el sofá, quita el coche rojo de la calle"></textarea></div><button id="generate-btn" class="action-button">Aplicar Cambio</button>`;
+            agentPanel.innerHTML = `
+                <h3><i class='bx bx-layer-plus'></i> Añadir o Quitar Elementos</h3>
+                <p>1. Sube una imagen para empezar.</p>
+                <div class="form-group">
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    <label for="image-upload" class="action-button upload-button">Seleccionar Imagen</label>
+                </div>
+                <p>2. Completa los campos para una edición precisa.</p>
+                <div class="form-group">
+                    <label for="subject-input">Sujeto Principal de la Imagen</label>
+                    <input type="text" id="subject-input" placeholder="Ej: una sala de estar moderna, un retrato de una mujer">
+                </div>
+                <div class="form-group">
+                    <label for="action-select">Acción</label>
+                    <select id="action-select">
+                        <option value="add">Añadir</option>
+                        <option value="remove">Quitar</option>
+                        <option value="modify">Modificar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="element-input">Elemento</label>
+                    <input type="text" id="element-input" placeholder="Ej: un gato siamés, el cuadro de la pared, la lámpara de pie">
+                </div>
+                <div class="form-group">
+                    <label for="integration-input">Cómo debe integrarse el cambio</label>
+                    <textarea id="integration-input" placeholder="Ej: de forma realista, respetando la iluminación y las sombras existentes. El gato debe estar acurrucado en la esquina del sofá."></textarea>
+                </div>
+                <button id="generate-btn" class="action-button">Aplicar Cambio</button>
+                <p class="prompt-tip">Sé lo más específico posible en "Cómo debe integrarse el cambio" para obtener los mejores resultados.</p>
+            `;
             document.getElementById('image-upload').addEventListener('change', handleFileUpload);
             document.getElementById('generate-btn').addEventListener('click', () => {
-                const prompt = document.getElementById('edit-prompt').value;
+                const subject = document.getElementById('subject-input').value.trim();
+                const action = document.getElementById('action-select').value;
+                const element = document.getElementById('element-input').value.trim();
+                const integration = document.getElementById('integration-input').value.trim();
                 if (uploadedImagesBase64.length === 0) return alert('Por favor, sube una imagen primero.');
-                if (!prompt) return alert('Por favor, escribe la instrucción de edición.');
-                // **LA CORRECCIÓN**: Enviamos el array, que en este caso tiene 1 imagen
+                if (!subject || !element || !integration) return alert('Por favor, completa todos los campos.');
+                // Construimos el prompt estructurado
+                const prompt = `Using the provided image of "${subject}", please ${action} "${element}" to/from the scene. Ensure the change is ${integration}.`;
                 handleImageEditApiCall(prompt, uploadedImagesBase64);
             });
         },
@@ -459,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     const handleImageEditApiCall = async (prompt, images) => { // AHORA SIEMPRE RECIBE UN ARRAY
-    const finalPrompt = `Using the provided image(s) as context, ${prompt}`;
+    const finalPrompt = prompt;
     console.log(`[Frontend Log] Enviando a /edit-image: "${finalPrompt}"`);
     console.log(`[Frontend Log] Enviando ${images.length} imágenes.`);
     
