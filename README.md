@@ -23,7 +23,7 @@ AI Image Studio solves this by replacing the single, intimidating prompt box wit
 -   **Guided Generation Agents:** Effortlessly create photorealistic scenes, professional product mockups, minimalist backgrounds, and images with precise text using intuitive, structured forms.
 -   **Intelligent Editing Agents:** Go beyond generation. Perform complex edits like inpainting (retouching specific areas), style transfer, and adding or removing elements with simple, conversational instructions.
 -   **Advanced Multi-Image Fusion:** Combine elements from multiple uploaded images to create entirely new scenes, perfect for creative collages or realistic product placements.
--   **The Continuity Director (Our Most Advanced Agent):** This revolutionary agent for sequential art solves the biggest challenge in AI storyboarding: **visual consistency**. It uses the previously generated panel as a direct visual reference for the next, allowing users to modify a character's pose or the scene's lighting while preserving the core art style and character design.
+-   **The Continuity Director (Our Most Advanced Agent):** This revolutionary agent for sequential art solves the biggest challenge in AI storyboarding: **visual consistency**. It uses the previously generated panel as a direct visual reference for the next, allowing users to modify a character's pose or the scene's lighting while preserving the core art style and character design. (TIP: change layer by layer to maintain the visual consistency)
 
 ### 🛠️ How It Works: Technical Architecture
 
