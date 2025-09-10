@@ -137,18 +137,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>Paso 2:</strong> Describe qué elemento cambia y cómo.</p>
                 <div class="form-group">
                     <label for="comic-mask">Elemento a Modificar</label>
-                    <input type="text" id="comic-mask" placeholder="Ej: el superhéroe, el sol, el fondo...">
+                    <input type="text" id="comic-mask" placeholder="Ej: las manos del personaje, el fondo...">
                 </div>
                 <div class="form-group">
                     <label for="comic-change">Descripción del Cambio</label>
-                    <textarea id="comic-change" placeholder="Ej: ahora está saltando a la izquierda, ahora es de día, ahora está lloviendo..."></textarea>
+                    <textarea id="comic-change" placeholder="Ej: ahora están levantadas frente a su pecho, con las palmas hacia adelante..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="comic-dialogue">Nuevo Diálogo (Opcional)</label>
-                    <input type="text" id="comic-dialogue" placeholder="Ej: '¡No escaparás!'">
+                    <input type="text" id="comic-dialogue" placeholder="Ej: '¡Tu reinado de terror termina aquí!'">
                 </div>
-                <button id="generate-btn" class="action-button">Generar Siguiente Viñeta</button>
+                <button id="generate-plan-btn" class="action-button secondary-button">Generar Plan de Edición</button>
+                <button id="generate-btn" class="action-button">Aplicar Cambios</button>
                 <button id="reiniciar-btn" class="action-button secondary-button">Reiniciar Historia</button>
+                <div id="plan-container" style="margin-top: 10px; display: none;"></div>
                 <div id="panel-gallery-container">
                     <h4>Viñetas Creadas (${panelGallery.length}):</h4>
                     <div id="panel-gallery">
@@ -158,6 +160,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
+            // Botón para generar el plan
+            document.getElementById('generate-plan-btn').addEventListener('click', async () => {
+                const mask = document.getElementById('comic-mask').value.trim();
+                const change = document.getElementById('comic-change').value.trim();
+                if (!mask || !change) {
+                    alert('Debes describir el elemento a modificar y el cambio.');
+                    return;
+                }
+                const planContainer = document.getElementById('plan-container');
+                planContainer.innerHTML = `<p>Generando plan... <i class="bx bx-loader bx-spin"></i></p>`;
+                planContainer.style.display = 'block';
+                try {
+                    const response = await fetch('/generate-edit-plan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            mask,
+                            change,
+                            lockedStyle,
+                            currentDescription: `Personaje: ${lockedCharacter}, Escenario: ${lockedSetting}`
+                        })
+                    });
+                    if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error al generar el plan');
+                    }
+                    const { plan } = await response.json();
+                    planContainer.innerHTML = `<pre style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; font-family: monospace; white-space: pre-wrap;">${plan}</pre>`;
+                } catch (error) {
+                    console.error('Error:', error);
+                    planContainer.innerHTML = `<p style="color: red;">Error al generar el plan: ${error.message}</p>`;
+                }
+            });
+            // Botón para aplicar el cambio
             document.getElementById('generate-btn').addEventListener('click', async () => {
                 const mask = document.getElementById('comic-mask').value.trim();
                 const change = document.getElementById('comic-change').value.trim();
@@ -237,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     };
-
     // Inicializar la interfaz
     renderComicUI();
 },
@@ -378,15 +413,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    function compressBase64Image(base64String, maxWidth = 512, quality = 0.8) {
+    function compressBase64Image(base64String, maxWidth = 512, quality = 0.8, maxFileSizeMB = 30) {
     return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            // Calcular nuevas dimensiones manteniendo aspect ratio
             let { width, height } = img;
-            // Solo comprimir si es más grande que maxWidth
+            // Reducir resolución si es necesario
             if (width > maxWidth) {
                 const ratio = maxWidth / width;
                 width = maxWidth;
@@ -394,13 +428,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             canvas.width = width;
             canvas.height = height;
-            // Usar mejor calidad de reescalado
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
-            // Convertir a JPEG para mejor compresión
-            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
-            console.log(`[Frontend Log] Imagen comprimida: ${base64String.length} -> ${compressedBase64.length} caracteres`);
+            let compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            let currentSizeMB = (compressedBase64.length * 0.75) / (1024 * 1024); // Aproximación de tamaño en MB
+            // Si sigue siendo demasiado grande, reducir calidad iterativamente
+            let currentQuality = quality;
+            while (currentSizeMB > maxFileSizeMB && currentQuality > 0.1) {
+                currentQuality -= 0.1;
+                compressedBase64 = canvas.toDataURL('image/jpeg', currentQuality);
+                currentSizeMB = (compressedBase64.length * 0.75) / (1024 * 1024);
+                console.log(`[Calidad Ajustada] Nueva calidad: ${currentQuality.toFixed(1)}, Tamaño: ${currentSizeMB.toFixed(2)}MB`);
+            }
+            console.log(`[Frontend Log] Imagen comprimida: ${(base64String.length * 0.75 / (1024*1024)).toFixed(2)}MB -> ${currentSizeMB.toFixed(2)}MB`);
             resolve(compressedBase64);
         };
         img.onerror = () => {
